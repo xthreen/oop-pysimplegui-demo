@@ -1,0 +1,63 @@
+# Spanish translations for PACKAGE package
+# Traducciones al espa�ol para el paquete PACKAGE.
+# Copyright (C) 2023 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-26 02:17-0400\n"
+"PO-Revision-Date: 2023-04-26 02:20-0400\n"
+"Last-Translator: <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CP1252\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\example_app.py:68
+msgid "Welcome to the complex state machine."
+msgstr "Bienvenido a la compleja máquina de estados."
+
+#: .\example_app.py:70 .\example_app.py:139
+msgid "Go to State A"
+msgstr "Ir al Estado A"
+
+#: .\example_app.py:71 .\example_app.py:106
+msgid "Go to State B"
+msgstr "Ir al Estado B"
+
+#: .\example_app.py:72 .\example_app.py:108 .\example_app.py:141
+msgid "Exit"
+msgstr "Salida"
+
+#: .\example_app.py:74
+msgid "Enter the file URL to download:"
+msgstr "Ingrese la URL del archivo para descargar:"
+
+#: .\example_app.py:75
+msgid "Download"
+msgstr "Descargar"
+
+#: .\example_app.py:104
+msgid "You are in State A."
+msgstr "Estás en el estado A."
+
+#: .\example_app.py:107 .\example_app.py:140
+msgid "Go back to Initial"
+msgstr "Volver a Inicial"
+
+#: .\example_app.py:114
+msgid "State A"
+msgstr "Estado A"
+
+#: .\example_app.py:137
+msgid "You are in State B."
+msgstr "Estás en el estado B."
+
+#: .\example_app.py:201
+msgid "Complex State Machine"
+msgstr "Máquina de estado complejo"
