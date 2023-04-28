@@ -1,4 +1,4 @@
-"""example class hierarchy for a complex state machine application"""
+"""demo class hierarchy for a complex state machine application"""
 import threading
 import time
 import queue
@@ -6,9 +6,10 @@ import os
 import platform
 import gettext
 import locale
+from abc import ABC, abstractmethod
 import requests
 import PySimpleGUI as sg
-from abc import ABC, abstractmethod
+
 
 FILE_DIR = os.path.join(os.path.dirname(__file__), "i18n")
 FILE_NAME = os.path.split(__file__)[1].split(".")[0]
@@ -62,6 +63,7 @@ class State:
 
 class InitialState(State):
     """Initial state"""
+
     def __init__(self, name, parent_machine):
         super().__init__(name, parent_machine)
         self.show_progress_bar = False
@@ -70,7 +72,15 @@ class InitialState(State):
         # print("Getting layout for initial state")
         return [
             [sg.Text(_("Welcome to the complex state machine."))],
-            [sg.ProgressBar(100, orientation="h", size=(36, 20), key="-progress_bar-", visible=self.show_progress_bar)],
+            [
+                sg.ProgressBar(
+                    100,
+                    orientation="h",
+                    size=(36, 20),
+                    key="-progress_bar-",
+                    visible=self.show_progress_bar,
+                )
+            ],
             [
                 sg.Button(_("Go to State A"), key="-go_to_state_a-"),
                 sg.Button(_("Go to State B"), key="-go_to_state_b-"),
@@ -103,7 +113,7 @@ class InitialState(State):
         elif event == "-PROGRESS-":
             progress = values["-PROGRESS-"]
             if self.window:
-                self.window["-progress_bar-"].update(progress,visible=True)
+                self.window["-progress_bar-"].update(progress, visible=True)
                 if progress >= 100:
                     self.window["-progress_bar-"].update(0, visible=False)
 
@@ -279,22 +289,6 @@ class SleepTask(Task):
                 break
 
 
-# class HttpGetTask(Task):
-#     """Request task class inherits from Task, used for HTTP requests"""
-
-#     def __init__(self, url, chunk_size=8192):
-#         self.http_client = HttpClient()
-#         self.url = url
-#         self.chunk_size = chunk_size
-#         self.content_length = 0
-#         self.content_loaded = 0
-
-#     def run(self):
-#         response = self.http_client.get(self.url)
-#         self.content_length = int(response.headers.get("Content-Length", 0))
-#         self.content_loaded = 0
-
-
 class DownloadManager:
     """Download manager / task queue class"""
 
@@ -340,6 +334,26 @@ class DownloadManager:
         for _ in range(self.num_workers):
             self.task_queue.put(None)
 
+def task_handler(manager, data):
+    """Task handler helper function"""
+    print(f"Task handler called with data {data}")
+
+    if isinstance(data, int):
+        manager.add_task(SleepTask(data))
+    elif isinstance(data, float):
+        manager.add_task(SleepTask(data))
+    elif isinstance(data, str):
+        if data.isdecimal():
+            if data.isdigit():
+                manager.add_task(SleepTask(int(data)))
+            else:
+                manager.add_task(SleepTask(float(data)))
+        else:
+            manager.add_task(SleepTask(10))
+            # TODO: Add a new download task to the queue + implement subclass
+            # manager.add_task(DownloadTask(data))
+    else:
+        manager.add_task(SleepTask(10))
 
 class StateMachine:
     """State machine class"""
@@ -367,7 +381,8 @@ class StateMachine:
             lambda progress: self.current_state.window.write_event_value(
                 "-PROGRESS-", progress
             )
-            if self.current_state.window is not None else None
+            if self.current_state.window is not None
+            else None
         )
         worker_threads = self.download_manager.start()
         while True:
@@ -387,9 +402,7 @@ class StateMachine:
 
                 # Check if the next state name is "download"
                 if next_state_name == "download":
-                    print(f"Data: {data}")
-                    try_task = SleepTask(10)
-                    self.download_manager.add_task(try_task)
+                    task_handler(self.download_manager, data)
                 elif next_state_name == "state_c":
                     secondary_windows.append(self.states[next_state_name])
                     self.states[next_state_name].open_window()
